@@ -110,6 +110,7 @@ const mint = () => {
 
         let nftTx = await nftContract.mint(overrides)
         console.log('Mining....', nftTx.hash)
+        setLoadingState(0)
         setMiningStatus(0)
 
         let tx = await nftTx.wait()
@@ -124,6 +125,8 @@ const mint = () => {
         )
         
         getMintedNFT()
+        setLoadingState(null)
+        setMiningStatus(null)
         /* getMintedNFT(tokenId) */
       } else {
         console.log("Ethereum object doesn't exist!")
@@ -162,7 +165,6 @@ const mint = () => {
 
           console.log('items', items);
           /* setMiningStatus(1) */
-          setLoadingState(1)
           setMintedNFT(items)
         } catch (error) {
           console.log(error)
@@ -183,7 +185,7 @@ const mint = () => {
         key={index}
         src={item.image}
         alt={'item-' + index}
-        className='flex-auto mb-10 ml-5 mr-5 h-60 w-60 rounded-lg shadow-2xl shadow-[#6FFFE9] hover:scale-105 transition duration-500 ease-in-out'
+        className='mb-10 ml-5 mr-5 h-60 w-60 rounded-lg shadow-2xl shadow-[#6FFFE9] hover:scale-105 transition duration-500 ease-in-out'
       />
     );
   }
@@ -267,7 +269,7 @@ const mint = () => {
           </span>
         </a>
       </div>
-      {loadingState === 0 ? (
+      {loadingState === 0 && (
         miningStatus === 0 ? (
           txError === null ? (
             <div className='flex flex-col justify-center items-center'>
@@ -287,15 +289,23 @@ const mint = () => {
         ) : (
           <div></div>
         )
-      ) : (
+      )}
+
+      { (mintedNFT && Object.keys(mintedNFT).length > 0) ? (
         <div className='flex flex-col justify-center items-center'>
           <div className='font-semibold text-lg text-center mb-4'>
-            Your Fantastic Domain Character
+            Your Fantastic Forest Beasts
           </div>
           <div class="flex-row bg-transparent">
             <div class="flex flex-wrap bg-transparent">
               {listItems}
             </div>
+          </div>
+        </div>
+      ) : (
+        <div className='flex flex-col justify-center items-center'>
+          <div className='font-semibold text-lg text-center mb-4'>
+            Your Fantastic Forest Beasts is Empty
           </div>
         </div>
       )}
